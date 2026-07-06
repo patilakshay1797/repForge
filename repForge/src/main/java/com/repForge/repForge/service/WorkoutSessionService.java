@@ -1,5 +1,7 @@
 package com.repForge.repForge.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,5 +19,10 @@ public class WorkoutSessionService {
 		if(obj != null)
 			return "Workout Session saved";
 		else return "Failed to save Workout Session";
+	}
+
+	public List<WorkoutSession> getAllWorkouts() {
+		
+		return workoutSessionRepo.findAll();
 	}
 }
