@@ -25,4 +25,8 @@ public class WorkoutSessionService {
 		
 		return workoutSessionRepo.findAll();
 	}
+
+	public void deleteWorkoutSession(Long id) {
+		workoutSessionRepo.deleteById(id);		
+	}
 }
