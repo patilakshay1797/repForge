@@ -1,11 +1,14 @@
 package com.repForge.repForge.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.repForge.repForge.dto.workoutSessionRequestDto;
+import com.repForge.repForge.entity.Exercise;
+import com.repForge.repForge.entity.ExerciseSet;
 import com.repForge.repForge.entity.WorkoutSession;
 import com.repForge.repForge.repository.WorkoutSessionRepository;
 import com.repForge.repForge.utils.BeanCopyUtil;
@@ -17,10 +20,26 @@ public class WorkoutSessionService {
 	private WorkoutSessionRepository workoutSessionRepo;
 
 	public String createWorkoutSession(WorkoutSession workSess) {
+		if (workSess.getExercises() != null) {
+			for (Exercise exercise : new ArrayList<>(workSess.getExercises())) {
+				if (exercise.getWorkoutSession() != workSess) {
+					workSess.addExercise(exercise);
+				}
+
+				if (exercise.getExerciseSets() != null) {
+					for (ExerciseSet exerciseSet : new ArrayList<>(exercise.getExerciseSets())) {
+						if (exerciseSet.getExercise() != exercise) {
+							exercise.addExerciseSet(exerciseSet);
+						}
+					}
+				}
+			}
+		}
+
 		WorkoutSession obj = workoutSessionRepo.save(workSess);
-		if (obj != null)
+		if (obj != null) {
 			return "Workout Session saved";
-		else
+		} else
 			return "Failed to save Workout Session";
 	}
 

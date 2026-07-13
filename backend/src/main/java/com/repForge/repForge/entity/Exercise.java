@@ -3,6 +3,8 @@ package com.repForge.repForge.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -41,14 +43,23 @@ public class Exercise {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workout_session_id")
+    @JsonIgnore
     private WorkoutSession workoutSession;
 
-    @OneToMany(
-            mappedBy = "exercise",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+    @OneToMany(mappedBy = "exercise", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ExerciseSet> exerciseSets = new ArrayList<>();
-    
+
+    public void setExerciseSets(List<ExerciseSet> exerciseSets) {
+        this.exerciseSets.clear();
+        if (exerciseSets != null) {
+            for (ExerciseSet exerciseSet : exerciseSets) {
+                if (exerciseSet != null && exerciseSet.getExercise() != this) {
+                    addExerciseSet(exerciseSet);
+                }
+            }
+        }
+    }
+
     public void addExerciseSet(ExerciseSet exerciseSet) {
         exerciseSets.add(exerciseSet);
         exerciseSet.setExercise(this);

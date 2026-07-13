@@ -53,11 +53,19 @@ public class WorkoutSession {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToMany(
-            mappedBy = "workoutSession",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+    @OneToMany(mappedBy = "workoutSession", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Exercise> exercises = new ArrayList<>();
+
+    public void setExercises(List<Exercise> exercises) {
+        this.exercises.clear();
+        if (exercises != null) {
+            for (Exercise exercise : exercises) {
+                if (exercise != null && exercise.getWorkoutSession() != this) {
+                    addExercise(exercise);
+                }
+            }
+        }
+    }
 
     @PrePersist
     public void onCreate() {
@@ -69,7 +77,7 @@ public class WorkoutSession {
     public void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
-    
+
     public void addExercise(Exercise exercise) {
         exercises.add(exercise);
         exercise.setWorkoutSession(this);

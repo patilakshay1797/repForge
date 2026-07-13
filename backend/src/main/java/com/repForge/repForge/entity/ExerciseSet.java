@@ -1,5 +1,7 @@
 package com.repForge.repForge.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -39,5 +41,6 @@ public class ExerciseSet {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_id")
+    @JsonIgnore
     private Exercise exercise;
 }
